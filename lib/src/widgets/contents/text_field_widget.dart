@@ -25,6 +25,11 @@ class _TextAreaState extends State<TextArea> {
   final _focusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _focusNode.dispose();
     super.dispose();
@@ -56,8 +61,8 @@ class _TextAreaState extends State<TextArea> {
               splashColor: AppTheme.secondary,
               disabledColor: AppTheme.secondary,
               onPressed: widget.controller.text.isNotEmpty
-                  ? null
-                  : () => copyToClipboard(context, widget.controller.text),
+                  ? () => copyToClipboard(context, widget.controller.text)
+                  : null,
             ),
             hintStyle: TextStyle(
                 color: AppTheme.secondary, fontStyle: FontStyle.italic),

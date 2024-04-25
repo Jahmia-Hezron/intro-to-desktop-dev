@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+    addListeners();
   }
 
   void addListeners() {
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildNewFileButton() {
     return Button(
       buttonText: 'New File',
-      onPressed: () => null,
+      onPressed: () => fileService.newFile(context),
       textColor: AppTheme.primary,
       backgroundColor: AppTheme.tertiary,
       disabledBackgroundColor: AppTheme.secondary,
@@ -81,19 +82,24 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildHeaderRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildNewFileButton(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildActionButton(Icons.upload_rounded, () {}),
-            const SizedBox(width: 10),
-            _buildActionButton(Icons.folder, () {}),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildNewFileButton(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildActionButton(
+                  Icons.upload_rounded, () => fileService.uploadFIle(context)),
+              const SizedBox(width: 10),
+              _buildActionButton(
+                  Icons.folder, () => fileService.newDirectory(context)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -104,7 +110,9 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           Button(
             buttonText: 'Save File',
-            onPressed: () => null,
+            onPressed: fileService.fieldsNotEmpty
+                ? () => fileService.saveContent(context)
+                : null,
             textColor: AppTheme.primary,
             backgroundColor: AppTheme.tertiary,
             disabledBackgroundColor: AppTheme.secondary,
@@ -123,14 +131,11 @@ class _HomeScreenState extends State<HomeScreen>
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
           children: [
             _buildHeaderRow(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: TextArea(
-                hintText: 'Enter Title',
-                maxLength: 20,
-                maxLines: 2,
-                controller: fileService.titleController,
-              ),
+            TextArea(
+              hintText: 'Enter Title',
+              maxLength: 20,
+              maxLines: 2,
+              controller: fileService.titleController,
             ),
             TextArea(
               hintText: 'Enter Video Description',
