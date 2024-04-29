@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 import 'src/screens/screens_export.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  WindowOptions windowOptions = const WindowOptions(
+      minimumSize: Size(480, 600),
+      size: Size(800, 800),
+      center: true,
+      title: 'MetaTube');
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
